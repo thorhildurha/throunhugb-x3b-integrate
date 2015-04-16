@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -10,17 +11,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import database.client.*;
+
 public class MyPages extends JPanel implements ActionListener{
-	private Book[] books;
+	private ArrayList<UserBook> books;
 	public static JPanel panel = new JPanel();
 	private Owner user;
 	private JFrame frame;
-	private Database database;
 	
-	public MyPages(Owner owner, JFrame frame, Database database){
+	public MyPages(Owner owner, JFrame frame){
 		this.user=owner;
-		this.database=database;
-		this.books = database.searchByUser(user);
+		this.books = UserBookTable.get().getBooks;
 		this.frame=frame;
 	}
 	
@@ -124,15 +125,16 @@ public class MyPages extends JPanel implements ActionListener{
 		valuestwo.addGap(100);
 		updatebutton.addGap(100);
 		GroupLayout.SequentialGroup vGrouptwo = bookslayout.createSequentialGroup();
-		GroupLayout.ParallelGroup booksGroupTitle[]= new GroupLayout.ParallelGroup[books.length];
-		JLabel BookNameLabel[]=new JLabel[books.length];
-		JButton UpdateButton[]=new JButton[books.length];
+		GroupLayout.ParallelGroup booksGroupTitle[]= new GroupLayout.ParallelGroup[books.size()];
+		JLabel BookNameLabel[]=new JLabel[books.size()];
+		JButton UpdateButton[]=new JButton[books.size()];
 		
 		for(int i = 0; i<books.length; i++){
+			DatabaseBook prototype = DatabaseBookTable.get().getBook(ISBN)
 			int k = i+1;
 			booksGroupTitle[i] = bookslayout.createParallelGroup();
 			JLabel TitleLabel= new JLabel("Book "+k+" :");
-			BookNameLabel[i] = new JLabel(books[i].getName());
+			BookNameLabel[i] = new JLabel(books.get(i).);
 			labelstwo.addComponent(TitleLabel);
 			valuestwo.addComponent(BookNameLabel[i]);
 			booksGroupTitle[i].addComponent(TitleLabel);

@@ -256,7 +256,7 @@ public class Search extends JFrame implements ActionListener
   }
   //Use: showbooks();
   //Before: Nothing
-  //After: The information in Search.books[] has been displayed on the JPanel
+  //After: The information in usedbooks have been displayed on the JPanel
   public void showbooks(){
 	  frame.setTitle("Search");
 	  results.removeAll(); //remove previous results
@@ -376,7 +376,7 @@ public class Search extends JFrame implements ActionListener
 	  
 	  //If search by isbn then it is unique
 	  if(!isbnString.isEmpty()){
-		  usedbooks=UserBookTable.get().getBooks(isbn);
+		  usedbooks=table.getBooks(isbn);
 		  /*JOptionPane.showMessageDialog(frame,
 				    "Please type in search conditions!",
 				    "Missing search conditions",
@@ -394,6 +394,34 @@ public class Search extends JFrame implements ActionListener
 			  }
 		  }
 	  });
+  }
+  public void register(){
+	  String Title = TitleText.getText();
+	  String Author=AuthorText.getText();
+	  String isbnString =isbnText.getText();
+	  int isbn=Integer.parseInt(isbnString);
+	  String category=categoryText.getText();
+	  String subcategory=subcategoryText.getText();
+	  
+	  DatabaseBookTable table = DatabaseBookTable.get();
+	  
+	  if(!isbnString.isEmpty()){
+		  newbooks.set(0,table.getBook(isbn));
+	  }
+	  
+	  Collections.sort(newbooks, new Comparator<DatabaseBook>() {
+		  @Override
+		  public int compare(DatabaseBook book1, DatabaseBook book2)
+		  {
+			  if(book1.price<=book2.price){
+				  return -1;
+			  }
+			  else{
+				  return 1;
+			  }
+		  }
+	  });
+	  
   }
   public void actionPerformed(ActionEvent e){
 	  JButton source = (JButton) e.getSource();
@@ -430,7 +458,7 @@ public class Search extends JFrame implements ActionListener
 			  if(("register"+i).equals(command))
 			  {	
 				  if(isloggedin()){
-					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i), fram);
+					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i));
 					  frame.remove(scrollpane);
 					  registerform.initUI();
 				  }

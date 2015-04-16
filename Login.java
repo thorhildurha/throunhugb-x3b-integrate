@@ -13,8 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import database.client.*;
+
 public class Login extends JDialog implements ActionListener{
-	private Database database;
 	private Owner newuser;
 	private JFrame frame;
 	private JDialog dialog;
@@ -29,9 +30,8 @@ public class Login extends JDialog implements ActionListener{
 	private JTextField phoneText;
 	private JTextField locationText;
 	
-	public Login(Owner owner, Database data,JFrame frame){
+	public Login(Owner owner,JFrame frame){
 		this.newuser=owner;
-		this.database = data;
 		this.dialog = new JDialog();	
 		this.frame=frame;
 		this.loginpanel=new JPanel();
@@ -215,7 +215,7 @@ public void actionPerformed(ActionEvent e){
 		JButton source = (JButton) e.getSource();
 		String command = source.getActionCommand();
 		if("login".equals(command)){
-			if (authenticate(userText.getText(),passwordText.getPassword())) {
+			if (authenticate(userText.getText(),passwordText.getText())) {
 			JOptionPane.showMessageDialog(source, "Welcome "+ userText.getText() + " you have been logged in");	
 			frame.remove(View.search.scrollpane);
 			View.search.searchDialog();
@@ -262,19 +262,27 @@ public void actionPerformed(ActionEvent e){
 //	Use: a.authenticate(x,y);
 //	Before: a is a class, x is a string, y is a char[]
 //	After: Check if x is the correct username and y is the correct password
-	private boolean authenticate(String username, char[] password) {
+	private boolean authenticate(String username, String password) {
 //		TODO: Tjékkum hvort username og lykilorð passi við eitthvað í gagnagrunninum, 
 //			  þá true annars false
 		
         // hardcoded username and password
-		
-		Boolean correctpw=database.isuser(username, password);
-		if(correctpw){
-			newuser.setloggedin(true);
-			newuser.setUsername(username);
-			newuser.setName("Guðrún Erla Ólafsdóttir");
-			newuser.setEmail("gudrunerlao@gmail.com");
-			newuser.setPhone("");
+		UserAccountTable table = UserAccountTable.get();
+		Boolean isusername=table.existsUN(username);
+		if(isusername){
+			UserAccount loginuser= table.getAccount(username);
+			if(loginuser.isPW(password)){
+				newuser.setloggedin(true);
+				newuser.setUsername(username);
+				newuser.setName(loginuser.getName());
+				newuser.setEmail(loginuser.getEmail());
+				if(loginuser.getPhone()==0){
+					newuser.setPhone("");
+				}
+				else{
+					newuser.setPhone(Integer.toString(loginuser.getPhone()));
+				}
+			}
 			return true;	
 		}
 		else{
