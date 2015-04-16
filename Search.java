@@ -374,26 +374,14 @@ public class Search extends JFrame implements ActionListener
 	  //The usedbooks table
 	  UserBookTable table = UserBookTable.get();
 	  
-	  //Look for different attributes
+	  //If search by isbn then it is unique
 	  if(!isbnString.isEmpty()){
 		  usedbooks=UserBookTable.get().getBooks(isbn);
 		  /*JOptionPane.showMessageDialog(frame,
 				    "Please type in search conditions!",
 				    "Missing search conditions",
 				    JOptionPane.INFORMATION_MESSAGE);*/
-	  }
-	  
-	  else if(!Title.isEmpty()){
-		  usedbooks=table.searchTitle(Title);
-	  }
-	  
-	  else if(!Author.isEmpty()){
-		  usedbooks=table.searchAuthor(Author);
-	  }
-	  else if(!category.isEmpty()){
-		  usedbooks=table.usedbooks
-	  }
-	  
+	  } 
 	  Collections.sort(usedbooks, new Comparator<UserBook>() {
 		  @Override
 		  public int compare(UserBook book1, UserBook book2)
