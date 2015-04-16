@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -274,14 +275,12 @@ public class Search extends JFrame implements ActionListener
 	  GroupLayout.ParallelGroup resultGroupPrice[]=new GroupLayout.ParallelGroup[usedbooks.size()];
 	  GroupLayout.ParallelGroup resultGroupCondition[] = new GroupLayout.ParallelGroup[usedbooks.size()];
 	  GroupLayout.ParallelGroup resultGroupseller[] = new GroupLayout.ParallelGroup[usedbooks.size()];
-	  GroupLayout.ParallelGroup resultGroupemail[] = new GroupLayout.ParallelGroup[usedbooks.size()];
 	  
 	  JLabel BookNameLabel[]=new JLabel[usedbooks.size()];
 	  JLabel BookAuthorLabel[]=new JLabel[usedbooks.size()];
 	  JLabel BookPriceLabel[]=new JLabel[usedbooks.size()];
 	  JLabel BookConditionLabel[] = new JLabel[usedbooks.size()];
 	  JButton[] BookSellerLabel=new JButton[usedbooks.size()];
-	  JLabel BookEmailLabel[]=new JLabel[usedbooks.size()];
 	  
 	  //Display the book result
 	  for(int i = 0; i<usedbooks.size(); i++){
@@ -295,15 +294,13 @@ public class Search extends JFrame implements ActionListener
 		  resultGroupPrice[i]=result.createParallelGroup();
 		  resultGroupCondition[i]=result.createParallelGroup();
 		  resultGroupseller[i]=result.createParallelGroup();
-		  resultGroupemail[i]=result.createParallelGroup();
-		  resultGroupemail[i].addGap(50);
+		  resultGroupseller[i].addGap(50);
 
 		  
 		  JLabel TitleLabel= new JLabel("Title:");
 		  JLabel AuthorLabel = new JLabel("Author:");
 		  JLabel PriceLabel= new JLabel("Price:");
 		  JLabel SellerLabel=new JLabel("Owner:");
-		  JLabel EmailLabel = new JLabel("Email:");
 		  JLabel ConditionLabel = new JLabel("Condition:");
 		  
 		  BookNameLabel[i] = new JLabel(prototype.title); //No Title or Author on used books
@@ -311,20 +308,18 @@ public class Search extends JFrame implements ActionListener
 		  BookPriceLabel[i] = new JLabel(Integer.toString(usedbooks.get(i).getPrice())); 
 		  BookSellerLabel[i]=new JButton(seller.username);
 		  BookSellerLabel[i].setBorderPainted( false );
-		  BookEmailLabel[i] =new JLabel(seller.getEmail()); //Missing email
+		  BookSellerLabel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 		  BookConditionLabel[i]=new JLabel(usedbooks.get(i).getCondition());
 		  labels.addComponent(TitleLabel);
 		  labels.addComponent(AuthorLabel);
 		  labels.addComponent(PriceLabel);
 		  labels.addComponent(ConditionLabel);
 		  labels.addComponent(SellerLabel);
-		  labels.addComponent(EmailLabel);
 		  values.addComponent(BookNameLabel[i]);
 		  values.addComponent(BookAuthorLabel[i]);
 		  values.addComponent(BookPriceLabel[i]);
 		  values.addComponent(BookConditionLabel[i]);
 		  values.addComponent(BookSellerLabel[i]);
-		  values.addComponent(BookEmailLabel[i]);
 		  
 		  resultGroupTitle[i].addComponent(TitleLabel);
 		  resultGroupTitle[i].addComponent(BookNameLabel[i]);
@@ -336,14 +331,11 @@ public class Search extends JFrame implements ActionListener
 		  resultGroupCondition[i].addComponent(BookConditionLabel[i]);
 		  resultGroupseller[i].addComponent(SellerLabel);
 		  resultGroupseller[i].addComponent(BookSellerLabel[i]);
-		  resultGroupemail[i].addComponent(EmailLabel);
-		  resultGroupemail[i].addComponent(BookEmailLabel[i]);
 		  vGroup.addGroup(resultGroupTitle[i]);
 		  vGroup.addGroup(resultGroupAuthor[i]);
 		  vGroup.addGroup(resultGroupPrice[i]);
 		  vGroup.addGroup(resultGroupCondition[i]);
 		  vGroup.addGroup(resultGroupseller[i]);
-		  vGroup.addGroup(resultGroupemail[i]);
 	  }
 	  hGroup.addGroup(labels);
 	  hGroup.addGroup(values);
