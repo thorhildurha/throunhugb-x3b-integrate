@@ -64,7 +64,7 @@ public class Search extends JFrame implements ActionListener
     GroupLayout.ParallelGroup buttonpan=panels.createParallelGroup();
     GroupLayout.ParallelGroup logoutpan=panels.createParallelGroup();
 
-	if(this.isloggedin()){ //If a user is loggedin then show mypages button and logout button
+	if(user.isloggedin()){ //If a user is loggedin then show mypages button and logout button
     	JButton mypages = new JButton("My Pages");
     	mypages.setActionCommand("mypages");
     	mypages.addActionListener(this);
@@ -367,7 +367,6 @@ public class Search extends JFrame implements ActionListener
 	  String Title = TitleText.getText();
 	  String Author=AuthorText.getText();
 	  String isbnString =isbnText.getText();
-	  int isbn=Integer.parseInt(isbnString);
 	  String category=categoryText.getText();
 	  String subcategory=subcategoryText.getText();
 	  
@@ -376,6 +375,7 @@ public class Search extends JFrame implements ActionListener
 	  
 	  //If search by isbn then it is unique
 	  if(!isbnString.isEmpty()){
+		  int isbn = Integer.parseInt(isbnString);
 		  usedbooks=table.getBooks(isbn);
 		  /*JOptionPane.showMessageDialog(frame,
 				    "Please type in search conditions!",
@@ -394,6 +394,13 @@ public class Search extends JFrame implements ActionListener
 			  }
 		  }
 	  });
+	  if(usedbooks.isEmpty()){
+		  JOptionPane.showMessageDialog(frame,
+				    "No search results!",
+				    "Results",
+				    JOptionPane.INFORMATION_MESSAGE);
+	  }
+	  
   }
   public void register(){
 	  String Title = TitleText.getText();
@@ -444,11 +451,6 @@ public class Search extends JFrame implements ActionListener
 		  mypage.mypagesForm();
 	  }
 	  if("logout".equals(command)){
-//		  Search newsearch = new Search(null,database,frame);
-//		  newsearch.searchDialog();
-//		  frame.remove(scrollpane);
-//		  panel=null;
-//		  View.search.searchDialog();
 		  user.setloggedin(false);
 		  frame.remove(scrollpane);
 		  searchDialog();		  
@@ -458,7 +460,7 @@ public class Search extends JFrame implements ActionListener
 			  if(("register"+i).equals(command))
 			  {	
 				  if(isloggedin()){
-					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i));
+					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i),frame);
 					  frame.remove(scrollpane);
 					  registerform.initUI();
 				  }

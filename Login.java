@@ -286,6 +286,7 @@ public boolean createaccount(){
 			if(loginuser.isPW(password)){
 				newuser.setloggedin(true);
 				newuser.setUsername(username);
+				newuser.setid(loginuser.accountID);
 				newuser.setName(loginuser.getName());
 				newuser.setEmail(loginuser.getEmail());
 				if(loginuser.getPhone()==0){

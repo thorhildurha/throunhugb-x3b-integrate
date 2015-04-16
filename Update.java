@@ -13,16 +13,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import database.client.*;
 
-
-public class Update extends JPanel{
-	private Book registerbook; //The book to update
+public class Update extends JPanel implements ActionListener{
+	private UserBook registerbook; //The book to update
 	private JPanel panel;
 	
-	public Update(Book x){
+	public Update(UserBook x){
 		this.registerbook=x;
 	}
 	public JPanel initUI(){
+		DatabaseBook prototype=DatabaseBookTable.get().getBook(registerbook.ISBN);
 		View.frame.setTitle("Update"); // Set a new title to the frame
 		//Create elements
 		JPanel labelpane=new JPanel();
@@ -33,16 +34,34 @@ public class Update extends JPanel{
 		JLabel SoldLabel= new JLabel("Sold:");
 		JCheckBox Sold = new JCheckBox();
 		JLabel NameLabel= new JLabel("Name: ");
-		JLabel NameVal=new JLabel(this.registerbook.getName());
+		JLabel NameVal=new JLabel(prototype.title);
 		JLabel AuthorLabel=new JLabel("Author: ");
-		JLabel AuthorVal = new JLabel(this.registerbook.getAuthor());
+		JLabel AuthorVal = new JLabel(prototype.authors);
 		JLabel IsbnLabel=new JLabel("ISBN: ");
-		JLabel IsbnVal=new JLabel(this.registerbook.getIsbn());
+		JLabel IsbnVal=new JLabel(Integer.toString(registerbook.ISBN));
 		JLabel price=new JLabel("Price:");
 		JLabel conditionLabel = new JLabel("Condition:");
 		JTextField pricefield=new JTextField(registerbook.getPrice());
 		String[] conditions={"like new","very good","good","fair","bad","very bad"};
 		JComboBox conditionField=new JComboBox(conditions);
+		if(registerbook.getCondition().equals(conditions[0])){
+			conditionField.setSelectedIndex(1);
+		}
+		else if(registerbook.getCondition().equals("very good")){
+			conditionField.setSelectedIndex(2);
+		}
+		else if(registerbook.getCondition().equals("good")){
+			conditionField.setSelectedIndex(3);
+		}
+		else if(registerbook.getCondition().equals("fair")){
+			conditionField.setSelectedIndex(4);
+		}
+		else if(registerbook.getCondition().equals("bad")){
+			conditionField.setSelectedIndex(5);
+		}
+		else if(registerbook.getCondition().equals("very bad")){
+			conditionField.setSelectedIndex(6);
+		}
 		JButton update=new JButton("Update");
 		
 		//Create Groups for Labels and values/inputfields
@@ -101,34 +120,31 @@ public class Update extends JPanel{
 		vGroup.addGroup(conditionGroup);
 		vGroup.addGroup(buttonGroup);
 		inputs.setVerticalGroup(vGroup);
-		update.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String inputprice=pricefield.getText();
-				String inputcondition=conditionField.getSelectedItem().toString();
-				Boolean updated=registerbook.update(inputprice,inputcondition);
-				Boolean registered = View.database.register(registerbook);
-				if(updated&&registered){
-					panel.setVisible(false);
-					MyPages.panel.setVisible(true);
-					JOptionPane.showMessageDialog(View.frame, "Thank you! \n We have successfully updated your book");
-					
-				}
-				else{
-					JOptionPane.showMessageDialog(View.frame,
+		update.setActionCommand("update");
+		update.addActionListener(this);
+		panel.add(labelpane);
+		return panel;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("update")){
+			String inputprice=pricefield.getText();
+			String inputcondition=conditionField.getSelectedItem().toString();
+			Boolean updated=registerbook.update(inputprice,inputcondition);
+			Boolean registered = View.database.register(registerbook);
+			if(updated&&registered){
+				panel.setVisible(false);
+				MyPages.panel.setVisible(true);
+				JOptionPane.showMessageDialog(View.frame, "Thank you! \n We have successfully updated your book");
+			}
+			else{
+				JOptionPane.showMessageDialog(View.frame,
 						    "Something went wrong! \n Please try again",
 						    "Registration Error",
 						    JOptionPane.ERROR_MESSAGE);
 				}
-				
 			}
-		});
-		panel.add(labelpane);
-		return panel;
-
+				
 	}
-
 
 }

@@ -1,5 +1,6 @@
 
 public class Owner {
+	private int id;
 	private String name; 
 	private String location;
 	private String email;
@@ -8,14 +9,14 @@ public class Owner {
 	private Boolean isloggedin;
 	
 	public Owner(){
-		this.name = name;
-		this.location = location;
-		this.email = email;
-		this.phone = phone;
-		this.username = username;
 		this.isloggedin=false;
 	}
-	
+	public int getid(){
+		return this.id;
+	}
+	public void setid(int aid){
+		this.id=aid;
+	}
 	//Use: String[] info=owner.getinfo();
 	//Before: owner is an Owner
 	//After: info contains owners information [name, location, email, phone]

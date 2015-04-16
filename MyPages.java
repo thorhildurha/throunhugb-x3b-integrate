@@ -21,7 +21,7 @@ public class MyPages extends JPanel implements ActionListener{
 	
 	public MyPages(Owner owner, JFrame frame){
 		this.user=owner;
-		this.books = UserBookTable.get().getBooks;
+		this.books = UserBookTable.get().getBooksByAccountID(owner.getid());
 		this.frame=frame;
 	}
 	
@@ -129,12 +129,13 @@ public class MyPages extends JPanel implements ActionListener{
 		JLabel BookNameLabel[]=new JLabel[books.size()];
 		JButton UpdateButton[]=new JButton[books.size()];
 		
-		for(int i = 0; i<books.length; i++){
-			DatabaseBook prototype = DatabaseBookTable.get().getBook(ISBN)
+		for(int i = 0; i<books.size(); i++){
+			DatabaseBook prototype = DatabaseBookTable.get().getBook(books.get(i).ISBN);
+			
 			int k = i+1;
 			booksGroupTitle[i] = bookslayout.createParallelGroup();
 			JLabel TitleLabel= new JLabel("Book "+k+" :");
-			BookNameLabel[i] = new JLabel(books.get(i).);
+			BookNameLabel[i] = new JLabel(prototype.title);
 			labelstwo.addComponent(TitleLabel);
 			valuestwo.addComponent(BookNameLabel[i]);
 			booksGroupTitle[i].addComponent(TitleLabel);
@@ -169,12 +170,12 @@ public class MyPages extends JPanel implements ActionListener{
 //		  JOptionPane.showMessageDialog(source, "Viljum við leyfa þetta?");  
 //		  }
 		if(books!=null){
-			  for(int i=0; i<books.length; i++){
+			  for(int i=0; i<books.size(); i++){
 				  if(("update"+i).equals(command))
 				  {	
 					  panel.setVisible(false);
 					  JPanel updating= new JPanel();
-					  Update updateForm = new Update(books[i]);
+					  Update updateForm = new Update(books.get(i));
 					  updating = updateForm.initUI();
 					  frame.add(updating);
 					  frame.setVisible(true);

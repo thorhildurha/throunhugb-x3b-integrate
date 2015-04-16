@@ -21,12 +21,11 @@ import java.util.Locale;
 
 import javax.swing.JComponent;
 import javax.swing.GroupLayout;
-
+import database.client.*;
 //This class draws a UI interface for a registration form
 
 public class RegistrationForm extends JPanel implements ActionListener{
-	private Database database;
-	private Book registerbook; //The book to register
+	private DatabaseBook registerbook; //The book to register
 	private JFrame frame; //The frame for the program 
 	private JPanel center; //The panel for the registration form
 	private JTextField pricefield; 
@@ -34,10 +33,9 @@ public class RegistrationForm extends JPanel implements ActionListener{
 	private NumberFormat priceFormat;
 	
 	
-	public RegistrationForm(Book x, JFrame frame, Database data){
+	public RegistrationForm(DatabaseBook x, JFrame frame){
 		this.registerbook=x;
 		this.frame=frame;
-		this.database=data;
 		this.priceFormat = NumberFormat.getNumberInstance();
 
 	}
