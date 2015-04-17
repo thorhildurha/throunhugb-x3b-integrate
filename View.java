@@ -19,17 +19,7 @@ public class View {
 		View view = new View();
 	}
 	public void Setup(){	
-		DatabaseBookScraper.get().createBook(245, "Mamma", "Jón Trausti", 3000, "description", "Verkfræði", "rafmagn");
-		DatabaseBookScraper.get().createBook(898, "Rauða gula hænan", "Agnes", 3000, "description", "Verkfræði", "rafmagn");
-		DatabaseBookScraper.get().createBook(976, "Rauða mamman", "ég", 3333, "des", "verk", "raf");
-		UserAccount some = UserAccountTable.get().getAccount("gudrunerla");
-		int id = some.accountID;
-		UserBookTable.get().eraseBook(245);
-		UserBookTable.get().eraseBook(898);
-		UserBookTable.get().eraseBook(976);
-		UserBookTable.get().createBook(id, 898);
-		UserBookTable.get().createBook(id, 245);
-		UserBookTable.get().createBook(id, 976);
+
 		frame.setSize(600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    search = new Search(loggedin, frame);

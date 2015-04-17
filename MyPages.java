@@ -24,7 +24,7 @@ public class MyPages extends JPanel implements ActionListener{
 		this.books = UserBookTable.get().getBooksByAccountID(owner.getid());
 		this.frame=frame;
 	}
-	
+
 //	Use: displayBooks(x,y,z);
 //	Before: x is a JFrame, y is an Owner, z is a Book[]
 //	After: Shows information about the Owner and the books that he is selling.
@@ -175,10 +175,7 @@ public class MyPages extends JPanel implements ActionListener{
 				  {	
 					  panel.setVisible(false);
 					  JPanel updating= new JPanel();
-					  Update updateForm = new Update(books.get(i));
-					  updating = updateForm.initUI();
-					  frame.add(updating);
-					  frame.setVisible(true);
+					  Update updateForm = new Update(books.get(i),user, frame);
 					  break;
 				  }
 				}  

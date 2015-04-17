@@ -13,16 +13,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 import database.client.*;
 
 public class Update extends JPanel implements ActionListener{
 	private UserBook registerbook; //The book to update
 	private JPanel panel;
+	private JFrame frame;
+	private Owner user;
+	private JTextField pricefield;
+	private JComboBox conditionField;
+	private JCheckBox Sold;
 	
-	public Update(UserBook x){
+	public Update(UserBook x, Owner user, JFrame frame){
 		this.registerbook=x;
+		this.user=user;
+		this.frame = frame;
+		initUI();
 	}
-	public JPanel initUI(){
+	public void initUI(){
 		DatabaseBook prototype=DatabaseBookTable.get().getBook(registerbook.ISBN);
 		View.frame.setTitle("Update"); // Set a new title to the frame
 		//Create elements
@@ -32,7 +41,7 @@ public class Update extends JPanel implements ActionListener{
 		panel.setLayout(paneling);
 
 		JLabel SoldLabel= new JLabel("Sold:");
-		JCheckBox Sold = new JCheckBox();
+		Sold = new JCheckBox();
 		JLabel NameLabel= new JLabel("Name: ");
 		JLabel NameVal=new JLabel(prototype.title);
 		JLabel AuthorLabel=new JLabel("Author: ");
@@ -41,26 +50,26 @@ public class Update extends JPanel implements ActionListener{
 		JLabel IsbnVal=new JLabel(Integer.toString(registerbook.ISBN));
 		JLabel price=new JLabel("Price:");
 		JLabel conditionLabel = new JLabel("Condition:");
-		JTextField pricefield=new JTextField(registerbook.getPrice());
+		pricefield=new JTextField(Integer.toString(registerbook.getPrice()));
 		String[] conditions={"like new","very good","good","fair","bad","very bad"};
-		JComboBox conditionField=new JComboBox(conditions);
-		if(registerbook.getCondition().equals(conditions[0])){
-			conditionField.setSelectedIndex(1);
+		conditionField=new JComboBox(conditions);
+		if(registerbook.getCondition().equals("like  new")){
+			conditionField.setSelectedIndex(0);
 		}
 		else if(registerbook.getCondition().equals("very good")){
-			conditionField.setSelectedIndex(2);
+			conditionField.setSelectedIndex(1);
 		}
 		else if(registerbook.getCondition().equals("good")){
-			conditionField.setSelectedIndex(3);
+			conditionField.setSelectedIndex(2);
 		}
 		else if(registerbook.getCondition().equals("fair")){
-			conditionField.setSelectedIndex(4);
+			conditionField.setSelectedIndex(3);
 		}
 		else if(registerbook.getCondition().equals("bad")){
-			conditionField.setSelectedIndex(5);
+			conditionField.setSelectedIndex(4);
 		}
 		else if(registerbook.getCondition().equals("very bad")){
-			conditionField.setSelectedIndex(6);
+			conditionField.setSelectedIndex(5);
 		}
 		JButton update=new JButton("Update");
 		
@@ -123,26 +132,34 @@ public class Update extends JPanel implements ActionListener{
 		update.setActionCommand("update");
 		update.addActionListener(this);
 		panel.add(labelpane);
-		return panel;
+		frame.add(panel);
+		frame.setVisible(true);
 	}
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getActionCommand().equals("update")){
+			if(Sold.isSelected()){
+				UserBookTable.get().deleteBook(registerbook.instanceID);
+			}
 			String inputprice=pricefield.getText();
 			String inputcondition=conditionField.getSelectedItem().toString();
-			Boolean updated=registerbook.update(inputprice,inputcondition);
-			Boolean registered = View.database.register(registerbook);
-			if(updated&&registered){
-				panel.setVisible(false);
-				MyPages.panel.setVisible(true);
-				JOptionPane.showMessageDialog(View.frame, "Thank you! \n We have successfully updated your book");
+			int price;
+			if(inputprice.isEmpty()){
+				price=registerbook.getPrice();
 			}
 			else{
-				JOptionPane.showMessageDialog(View.frame,
+				price=Integer.parseInt(inputprice);
+			}
+			registerbook.editCondition(inputcondition);
+			registerbook.editPrice(price);
+			panel.setVisible(false);
+			MyPages mypage= new MyPages(user,frame);
+			mypage.mypagesForm();
+			JOptionPane.showMessageDialog(View.frame, "Thank you! \n We have successfully updated your book");
+				/*JOptionPane.showMessageDialog(View.frame,
 						    "Something went wrong! \n Please try again",
 						    "Registration Error",
-						    JOptionPane.ERROR_MESSAGE);
-				}
+						    JOptionPane.ERROR_MESSAGE);*/
 			}
 				
 	}

@@ -25,10 +25,11 @@ public class Search extends JFrame implements ActionListener
   private JFrame frame;
   private JPanel panel;
   public static JScrollPane scrollpane;
-  private ArrayList<UserBook> usedbooks;  //stores the books that the user searched for
-  private ArrayList<DatabaseBook> newbooks;
+  private ArrayList<UserBook> usedbooks;  //search for books
+  private ArrayList<DatabaseBook> newbooks;  //register books
   private JPanel results;
-  private JTextField TitleText; //Needs to be accessible in all the class
+  //Fill in fields
+  private JTextField TitleText; 
   private JTextField AuthorText;
   private JTextField isbnText;
   private JTextField categoryText;
@@ -64,7 +65,8 @@ public class Search extends JFrame implements ActionListener
     GroupLayout.ParallelGroup buttonpan=panels.createParallelGroup();
     GroupLayout.ParallelGroup logoutpan=panels.createParallelGroup();
 
-	if(user.isloggedin()){ //If a user is loggedin then show mypages button and logout button
+  //If a user is loggedin then show mypages button and logout button
+	if(user.isloggedin()){
     	JButton mypages = new JButton("My Pages");
     	mypages.setActionCommand("mypages");
     	mypages.addActionListener(this);
@@ -76,7 +78,8 @@ public class Search extends JFrame implements ActionListener
     	pan.addComponent(logout);
     	logoutpan.addComponent(logout);
     }
-    else{ //if he is not loggedin show login button
+	//if he is not loggedin show login button
+    else{
     	JButton login = new JButton("Login");
     	login.setActionCommand("login");
     	login.addActionListener(this);
@@ -187,8 +190,10 @@ public class Search extends JFrame implements ActionListener
     frame.add(scrollpane);
     frame.setVisible(true);
   }
-  
+
+  //Displays the books in newbooks
   public void shownewbooks(){
+
 	  results.removeAll(); //remove previous results
 	  GroupLayout result =new GroupLayout(results);
 	  results.setLayout(result);
@@ -196,8 +201,8 @@ public class Search extends JFrame implements ActionListener
 	  result.setAutoCreateContainerGaps(true);
 	  
 	  GroupLayout.SequentialGroup hGroup = result.createSequentialGroup();
-	  GroupLayout.ParallelGroup labels=result.createParallelGroup(); //One for Labels
-	  GroupLayout.ParallelGroup values=result.createParallelGroup(); //One for Labels
+	  GroupLayout.ParallelGroup labels=result.createParallelGroup(); 
+	  GroupLayout.ParallelGroup values=result.createParallelGroup(); 
 	  GroupLayout.ParallelGroup registerbutton = result.createParallelGroup();
 	  
 	  GroupLayout.SequentialGroup vGroup = result.createSequentialGroup();
@@ -209,14 +214,12 @@ public class Search extends JFrame implements ActionListener
 	  JLabel BookPriceLabel[]=new JLabel[newbooks.size()];
 	  JButton RegisterButton[]=new JButton[newbooks.size()];
 
-	  String isbn="";
 	  for(int i = 0; i<newbooks.size(); i++){
 		  resultGroupTitle[i]=result.createParallelGroup();
 		  resultGroupAuthor[i]=result.createParallelGroup();
 		  resultGroupPrice[i]=result.createParallelGroup();
 		  resultGroupPrice[i].addGap(50);
 
-		  
 		  JLabel TitleLabel= new JLabel("Title:");
 		  JLabel AuthorLabel = new JLabel("Author:");
 		  JLabel PriceLabel= new JLabel("Price:");
@@ -237,6 +240,8 @@ public class Search extends JFrame implements ActionListener
 		  RegisterButton[i] = new JButton("register");
 		  RegisterButton[i].setActionCommand("register"+i);
 		  RegisterButton[i].addActionListener(this);
+		  RegisterButton[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 		  registerbutton.addComponent(RegisterButton[i]);
 		  resultGroupAuthor[i].addComponent(RegisterButton[i]);
 		  resultGroupPrice[i].addComponent(PriceLabel);
@@ -254,6 +259,7 @@ public class Search extends JFrame implements ActionListener
 	  frame.setVisible(true);
 	  
   }
+  
   //Use: showbooks();
   //Before: Nothing
   //After: The information in usedbooks have been displayed on the JPanel
@@ -307,7 +313,9 @@ public class Search extends JFrame implements ActionListener
 		  BookAuthorLabel[i] = new JLabel(prototype.authors); //No Author on used books
 		  BookPriceLabel[i] = new JLabel(Integer.toString(usedbooks.get(i).getPrice())); 
 		  BookSellerLabel[i]=new JButton(seller.username);
-		  BookSellerLabel[i].setBorderPainted( false );
+		  BookSellerLabel[i].setActionCommand("user"+i);
+		  BookSellerLabel[i].addActionListener(this);
+		  BookSellerLabel[i].setBorderPainted(false);
 		  BookSellerLabel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 		  BookConditionLabel[i]=new JLabel(usedbooks.get(i).getCondition());
 		  labels.addComponent(TitleLabel);
@@ -356,13 +364,12 @@ public class Search extends JFrame implements ActionListener
       return false;
     }
   }
-  
-  
+
   //
   //Before: 
   //After: 
   public void search(){
-	  
+	  usedbooks.clear();
 	  //The input fields
 	  String Title = TitleText.getText();
 	  String Author=AuthorText.getText();
@@ -379,50 +386,52 @@ public class Search extends JFrame implements ActionListener
 				    "Missing search conditions",
 				    JOptionPane.INFORMATION_MESSAGE);
 	  }
-	  //If search by isbn then it is unique
-	  if(!isbnString.isEmpty()){
-		  int isbn = Integer.parseInt(isbnString);
-		  usedbooks=table.getBooks(isbn);
-	  } 
-	  else{
-		 if(Title.isEmpty()){
-			 Title=null;
-		 }
-		 if(Author.isEmpty()){
-			 Author=null;
-		 }
-		 if(category.isEmpty()){
-			 category=null;
-		 }
-		 if(subcategory.isEmpty()){
-			 subcategory=null;
-		 }
-		 usedbooks= table.searchEverything(Title, Author, category, subcategory);
-	  }
-	  Collections.sort(usedbooks, new Comparator<UserBook>() {
-		  @Override
-		  public int compare(UserBook book1, UserBook book2)
-		  {
-			  if(book1.getPrice()<book2.getPrice()){
-				  return -1;
-			  }
-			  else{
-				  return 1;
-			  }
+	  else{//If search by isbn then it is unique
+		  if(!isbnString.isEmpty()){
+			  int isbn = Integer.parseInt(isbnString);
+			  usedbooks=table.getBooks(isbn);
+		  } 
+		  else{
+			 if(Title.isEmpty()){
+				 Title=null;
+			 }
+			 if(Author.isEmpty()){
+				 Author=null;
+			 }
+			 if(category.isEmpty()){
+				 category=null;
+			 }
+			 if(subcategory.isEmpty()){
+				 subcategory=null;
+			 }
+			 usedbooks= table.searchEverything(Title,Author,category,subcategory);
 		  }
-	  });
-	  if(usedbooks.isEmpty()){
-		  JOptionPane.showMessageDialog(frame,
-				    "No search results!",
-				    "Results",
-				    JOptionPane.INFORMATION_MESSAGE);
-	  }
-	  else{
-		  showbooks();
+		  if(usedbooks.isEmpty()){
+			  JOptionPane.showMessageDialog(frame,
+					    "No search results!",
+					    "Results",
+					    JOptionPane.INFORMATION_MESSAGE);
+		  }
+		  else{
+			  Collections.sort(usedbooks, new Comparator<UserBook>() {
+				  @Override
+				  public int compare(UserBook book1, UserBook book2)
+				  {
+					  if(book1.getPrice()<book2.getPrice()){
+						  return -1;
+					  }
+					  else{
+						  return 1;
+					  }
+				  }
+			  });
+			  showbooks();
+		  }
 	  }
 	  
   }
   public void register(){
+	  newbooks.clear();
 	  String Title = TitleText.getText();
 	  String Author=AuthorText.getText();
 	  String isbnString =isbnText.getText();
@@ -431,33 +440,55 @@ public class Search extends JFrame implements ActionListener
 	  
 	  DatabaseBookTable table = DatabaseBookTable.get();
 	  DatabaseBook some = null;
-	  if(!isbnString.isEmpty()){
-		  int isbn=Integer.parseInt(isbnString);
-		  newbooks.add((table.getBook(isbn)));
-	  }
-	  
-	  Collections.sort(newbooks, new Comparator<DatabaseBook>() {
-		  @Override
-		  public int compare(DatabaseBook book1, DatabaseBook book2)
-		  {
-			  if(book1.price<=book2.price){
-				  return -1;
-			  }
-			  else{
-				  return 1;
-			  }
-		  }
-	  });
-
-	  if(newbooks.isEmpty()){
+	  if(isbnString.isEmpty()&&Author.isEmpty()&&Title.isEmpty()&&category.isEmpty()&&subcategory.isEmpty()){
 		  JOptionPane.showMessageDialog(frame,
 				    "Please type in search conditions!",
 				    "Missing search conditions",
 				    JOptionPane.INFORMATION_MESSAGE);
 	  }
-	  shownewbooks();
+	  else if(!isbnString.isEmpty()){
+		  int isbn=Integer.parseInt(isbnString);
+		  newbooks.add((table.getBook(isbn)));
+	  }
+	  else{
+		  if(Title.isEmpty()){
+			  Title=null;
+		  }
+		  if(Author.isEmpty()){
+			  Author=null;
+		  }
+		  if(category.isEmpty()){
+			  category=null;
+		  }
+		  if(subcategory.isEmpty()){
+			  subcategory=null;
+		  }
+		  newbooks=table.searchEverything(Title, Author, category, subcategory);
+	  }
 
-	  
+	  if(newbooks.isEmpty()){
+		  JOptionPane.showMessageDialog(frame,
+				    "There were no results!",
+				    "No results",
+				    JOptionPane.INFORMATION_MESSAGE);
+	  }
+	  else{
+		  Collections.sort(newbooks, new Comparator<DatabaseBook>() {
+			  @Override
+			  public int compare(DatabaseBook book1, DatabaseBook book2)
+			  {
+				  if(book1.price<=book2.price){
+					  return -1;
+				  }
+				  else{
+					  return 1;
+				  }
+			  }
+		  });
+		  
+		  shownewbooks();
+		  
+	  }
   }
   public void actionPerformed(ActionEvent e){
 	  JButton source = (JButton) e.getSource();
@@ -489,7 +520,7 @@ public class Search extends JFrame implements ActionListener
 			  if(("register"+i).equals(command))
 			  {	
 				  if(isloggedin()){
-					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i),frame);
+					  RegistrationForm registerform = new RegistrationForm(newbooks.get(i),frame,user);
 					  frame.remove(scrollpane);
 					  registerform.initUI();
 				  }

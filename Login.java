@@ -158,7 +158,7 @@ public class Login extends JDialog implements ActionListener{
 		cancelButton.setBounds(10, 200, 80, 25);
 		newuserpanel.add(cancelButton);
 		
-		submitButton.setActionCommand("login");
+		submitButton.setActionCommand("submituser");
 	    submitButton.addActionListener(this);
 	    cancelButton.setActionCommand("cancel");
 	    cancelButton.addActionListener(this);
@@ -197,10 +197,7 @@ public class Login extends JDialog implements ActionListener{
 	    newvGroup.addGroup(PasswordGroup);
 
 	    newinputs.setVerticalGroup(newvGroup);
-	    
-		submitButton.setActionCommand("submituser");
-		
-		submitButton.addActionListener(this);
+	   		
 		
 		cancelButton.setActionCommand("cancel");
 		cancelButton.addActionListener(this);
@@ -216,14 +213,14 @@ public void actionPerformed(ActionEvent e){
 		String command = source.getActionCommand();
 		if("login".equals(command)){
 			if (authenticate(userText.getText(),passwordText.getText())) {
-			JOptionPane.showMessageDialog(source, "Welcome "+ userText.getText() + " you have been logged in");	
-			frame.remove(View.search.scrollpane);
-			View.search.searchDialog();
-			dialog.dispose();
+				JOptionPane.showMessageDialog(source, "Welcome "+ newuser.getName() + " you have been logged in");	
+				frame.remove(View.search.scrollpane);
+				View.search.searchDialog();
+				dialog.dispose();
 			} 
-		else {
-			JOptionPane.showMessageDialog(dialog, "Invalid username or password");	
-			}
+			else {
+				JOptionPane.showMessageDialog(dialog, "Invalid username or password");	
+				}
 		}
 		else if("newuser".equals(command)){
 			loginpanel.setVisible(false);
@@ -267,7 +264,7 @@ public boolean createaccount(){
 	}
 	else {
 		UserAccountTable.get().createAccount(username,pw,phone,name,email);
-		JOptionPane.showMessageDialog(dialog, "Thank you "+ nameText.getText() + " you have been registered!");
+		JOptionPane.showMessageDialog(dialog, "Thank you "+ name + " you have been registered!");
 		return true;
 	}
 }
@@ -295,8 +292,9 @@ public boolean createaccount(){
 				else{
 					newuser.setPhone(Integer.toString(loginuser.getPhone()));
 				}
+				return true;
 			}
-			return true;	
+			return false;
 		}
 		else{
 			return false;

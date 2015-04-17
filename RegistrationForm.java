@@ -26,6 +26,7 @@ import database.client.*;
 
 public class RegistrationForm extends JPanel implements ActionListener{
 	private DatabaseBook registerbook; //The book to register
+	private Owner user;
 	private JFrame frame; //The frame for the program 
 	private JPanel center; //The panel for the registration form
 	private JTextField pricefield; 
@@ -33,11 +34,11 @@ public class RegistrationForm extends JPanel implements ActionListener{
 	private NumberFormat priceFormat;
 	
 	
-	public RegistrationForm(DatabaseBook x, JFrame frame){
+	public RegistrationForm(DatabaseBook x, JFrame frame, Owner user){
 		this.registerbook=x;
 		this.frame=frame;
 		this.priceFormat = NumberFormat.getNumberInstance();
-
+		this.user=user;
 	}
 	public void initUI(){
 		frame.setTitle("Registration Form"); // Set a new title to the frame
@@ -48,11 +49,11 @@ public class RegistrationForm extends JPanel implements ActionListener{
 		center.setLayout(centering);
 		
 		JLabel NameLabel= new JLabel("Name: ");
-		JLabel NameVal=new JLabel(this.registerbook.getName());
+		JLabel NameVal=new JLabel(registerbook.title);
 		JLabel AuthorLabel=new JLabel("Author: ");
-		JLabel AuthorVal = new JLabel(this.registerbook.getAuthor());
+		JLabel AuthorVal = new JLabel(registerbook.authors);
 		JLabel IsbnLabel=new JLabel("ISBN: ");
-		JLabel IsbnVal=new JLabel(this.registerbook.getIsbn());
+		JLabel IsbnVal=new JLabel(Integer.toString(registerbook.ISBN));
 		JLabel price=new JLabel("Price:");
 		JLabel conditionLabel = new JLabel("Condition:");	
 		pricefield = new JTextField();
@@ -119,19 +120,15 @@ public class RegistrationForm extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		String inputprice=pricefield.getText();
 		String inputcondition=conditionField.getSelectedItem().toString();
-		Boolean updated=registerbook.update(inputprice,inputcondition); //Update the book for registration
-		Boolean registered = database.register(registerbook); //register the book
-		if(updated&&registered){
-			frame.remove(center);
-			View.search.searchDialog();
-			JOptionPane.showMessageDialog(frame, "Thank you! \n We have successfully registered your book");
+		UserBookTable table = UserBookTable.get();
+		table.createBook(user.getid(),registerbook.ISBN,Integer.parseInt(inputprice),inputcondition);
+		frame.remove(center);
+		View.search.searchDialog();
+		JOptionPane.showMessageDialog(frame, "Thank you! \n We have successfully registered your book");
 		}
-		else{
-			JOptionPane.showMessageDialog(frame,
+			/*JOptionPane.showMessageDialog(frame,
 				    "Something went wrong! \n Please try again",
 				    "Registration Error",
-				    JOptionPane.ERROR_MESSAGE);
-		}
-	}
-	
+				    JOptionPane.ERROR_MESSAGE);*/
+		
 }
