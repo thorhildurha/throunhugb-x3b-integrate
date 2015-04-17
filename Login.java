@@ -254,7 +254,7 @@ public boolean createaccount(){
 	String email = emailText.getText().trim();
 	String username=usernameText.getText().trim();
 	String phonenumber = phoneText.getText().trim();
-	String pw = passwordText.getText().trim();
+	String pw = newpasswordText.getText();
 	int phone=0;
 	//If user does not fill in phonenumber, phone must be 0
 	if(!phonenumber.isEmpty()){

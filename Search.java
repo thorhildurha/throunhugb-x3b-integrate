@@ -258,7 +258,6 @@ public class Search extends JFrame implements ActionListener
   //Before: Nothing
   //After: The information in usedbooks have been displayed on the JPanel
   public void showbooks(){
-	  frame.setTitle("Search");
 	  results.removeAll(); //remove previous results
 	  GroupLayout result =new GroupLayout(results);
 	  results.setLayout(result);
@@ -281,13 +280,14 @@ public class Search extends JFrame implements ActionListener
 	  JLabel BookPriceLabel[]=new JLabel[usedbooks.size()];
 	  JLabel BookConditionLabel[] = new JLabel[usedbooks.size()];
 	  JButton[] BookSellerLabel=new JButton[usedbooks.size()];
+	  DatabaseBookTable table = DatabaseBookTable.get();
 	  
 	  //Display the book result
 	  for(int i = 0; i<usedbooks.size(); i++){
 		  UserBook usedbook= usedbooks.get(i);
 		  int sellerid=usedbook.accountID;
 		  UserAccount seller=UserAccountTable.get().getAccount(sellerid); //The account of the seller of book(i)
-		  DatabaseBook prototype = DatabaseBookTable.get().getBook(usedbook.ISBN);
+		  DatabaseBook prototype=table.getBook(usedbook.ISBN);
 		  
 		  resultGroupTitle[i]=result.createParallelGroup();
 		  resultGroupAuthor[i]=result.createParallelGroup();
@@ -373,20 +373,37 @@ public class Search extends JFrame implements ActionListener
 	  //The usedbooks table
 	  UserBookTable table = UserBookTable.get();
 	  
+	  if(Title.isEmpty()&&Author.isEmpty()&&isbnString.isEmpty()&&category.isEmpty()&&subcategory.isEmpty()){
+		  JOptionPane.showMessageDialog(frame,
+				    "Please type in search conditions!",
+				    "Missing search conditions",
+				    JOptionPane.INFORMATION_MESSAGE);
+	  }
 	  //If search by isbn then it is unique
 	  if(!isbnString.isEmpty()){
 		  int isbn = Integer.parseInt(isbnString);
 		  usedbooks=table.getBooks(isbn);
-		  /*JOptionPane.showMessageDialog(frame,
-				    "Please type in search conditions!",
-				    "Missing search conditions",
-				    JOptionPane.INFORMATION_MESSAGE);*/
 	  } 
+	  else{
+		 if(Title.isEmpty()){
+			 Title=null;
+		 }
+		 if(Author.isEmpty()){
+			 Author=null;
+		 }
+		 if(category.isEmpty()){
+			 category=null;
+		 }
+		 if(subcategory.isEmpty()){
+			 subcategory=null;
+		 }
+		 usedbooks= table.searchEverything(Title, Author, category, subcategory);
+	  }
 	  Collections.sort(usedbooks, new Comparator<UserBook>() {
 		  @Override
 		  public int compare(UserBook book1, UserBook book2)
 		  {
-			  if(book1.getPrice()<=book2.getPrice()){
+			  if(book1.getPrice()<book2.getPrice()){
 				  return -1;
 			  }
 			  else{
@@ -400,20 +417,23 @@ public class Search extends JFrame implements ActionListener
 				    "Results",
 				    JOptionPane.INFORMATION_MESSAGE);
 	  }
+	  else{
+		  showbooks();
+	  }
 	  
   }
   public void register(){
 	  String Title = TitleText.getText();
 	  String Author=AuthorText.getText();
 	  String isbnString =isbnText.getText();
-	  int isbn=Integer.parseInt(isbnString);
 	  String category=categoryText.getText();
 	  String subcategory=subcategoryText.getText();
 	  
 	  DatabaseBookTable table = DatabaseBookTable.get();
-	  
+	  DatabaseBook some = null;
 	  if(!isbnString.isEmpty()){
-		  newbooks.set(0,table.getBook(isbn));
+		  int isbn=Integer.parseInt(isbnString);
+		  newbooks.add((table.getBook(isbn)));
 	  }
 	  
 	  Collections.sort(newbooks, new Comparator<DatabaseBook>() {
@@ -428,6 +448,15 @@ public class Search extends JFrame implements ActionListener
 			  }
 		  }
 	  });
+
+	  if(newbooks.isEmpty()){
+		  JOptionPane.showMessageDialog(frame,
+				    "Please type in search conditions!",
+				    "Missing search conditions",
+				    JOptionPane.INFORMATION_MESSAGE);
+	  }
+	  shownewbooks();
+
 	  
   }
   public void actionPerformed(ActionEvent e){
