@@ -346,6 +346,7 @@ public class Search extends JFrame implements ActionListener
 	  hGroup.addGroup(values);
 	  result.setHorizontalGroup(hGroup);
 	  result.setVerticalGroup(vGroup);
+	  results.setVisible(true);
 	  panel.revalidate(); //let the scroll pane know that changes have been made
 	  frame.setVisible(true);
   }
@@ -404,6 +405,7 @@ public class Search extends JFrame implements ActionListener
 			 usedbooks= table.searchEverything(Title,Author,category,subcategory);
 		  }
 		  if(usedbooks.isEmpty()){
+			  results.setVisible(false);
 			  JOptionPane.showMessageDialog(frame,
 					    "No search results!",
 					    "Results",
