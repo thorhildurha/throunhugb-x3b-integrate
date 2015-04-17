@@ -306,14 +306,14 @@ public class Search extends JFrame implements ActionListener
 		  JLabel TitleLabel= new JLabel("Title:");
 		  JLabel AuthorLabel = new JLabel("Author:");
 		  JLabel PriceLabel= new JLabel("Price:");
-		  JLabel SellerLabel=new JLabel("Owner:");
 		  JLabel ConditionLabel = new JLabel("Condition:");
 		  
 		  BookNameLabel[i] = new JLabel(prototype.title); //No Title or Author on used books
 		  BookAuthorLabel[i] = new JLabel(prototype.authors); //No Author on used books
 		  BookPriceLabel[i] = new JLabel(Integer.toString(usedbooks.get(i).getPrice())); 
-		  BookSellerLabel[i]=new JButton(seller.username);
-		  BookSellerLabel[i].setActionCommand("user"+i);
+		  BookSellerLabel[i]=new JButton("see more");
+		  BookSellerLabel[i].setActionCommand("more"+i);
+		  BookSellerLabel[i].setName(seller.username);
 		  BookSellerLabel[i].addActionListener(this);
 		  BookSellerLabel[i].setBorderPainted(false);
 		  BookSellerLabel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -322,7 +322,6 @@ public class Search extends JFrame implements ActionListener
 		  labels.addComponent(AuthorLabel);
 		  labels.addComponent(PriceLabel);
 		  labels.addComponent(ConditionLabel);
-		  labels.addComponent(SellerLabel);
 		  values.addComponent(BookNameLabel[i]);
 		  values.addComponent(BookAuthorLabel[i]);
 		  values.addComponent(BookPriceLabel[i]);
@@ -337,7 +336,6 @@ public class Search extends JFrame implements ActionListener
 		  resultGroupPrice[i].addComponent(BookPriceLabel[i]);
 		  resultGroupCondition[i].addComponent(ConditionLabel);
 		  resultGroupCondition[i].addComponent(BookConditionLabel[i]);
-		  resultGroupseller[i].addComponent(SellerLabel);
 		  resultGroupseller[i].addComponent(BookSellerLabel[i]);
 		  vGroup.addGroup(resultGroupTitle[i]);
 		  vGroup.addGroup(resultGroupAuthor[i]);
@@ -515,6 +513,25 @@ public class Search extends JFrame implements ActionListener
 		  frame.remove(scrollpane);
 		  searchDialog();		  
 	  }
+	  if(!usedbooks.isEmpty()){
+		  UserAccountTable table = UserAccountTable.get();
+		  for(int i=0; i<usedbooks.size(); i++){
+			  if(("more"+i).equals(command)){
+				  UserAccount ownerof=table.getAccount(source.getName());
+				  String phone=null;
+				  UserBook book=usedbooks.get(i);
+				  DatabaseBook prototype = DatabaseBookTable.get().getBook(book.ISBN);
+				  if(ownerof.getPhone()==0){
+					  phone="Not registered";
+				  }
+				  else{
+					  phone=Integer.toString(ownerof.getPhone());
+				  }
+				  JOptionPane.showMessageDialog(frame," Faculty: " + prototype.category + "\n Programme: " + prototype.subcategory+"\n Owner: " + ownerof.getName()+ "\n Email: " + ownerof.getEmail()+"\n Phone: " + phone,"More information",JOptionPane.INFORMATION_MESSAGE);
+				  break;
+			  }
+		  }
+	  }
 	  if(newbooks!=null){
 		  for(int i=0; i<newbooks.size(); i++){
 			  if(("register"+i).equals(command))
@@ -530,6 +547,7 @@ public class Search extends JFrame implements ActionListener
 							    "Registration Error",
 							    JOptionPane.ERROR_MESSAGE);
 				  }
+				  break;
 			  }
 		  }
 	  }
