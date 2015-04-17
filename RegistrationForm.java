@@ -120,13 +120,20 @@ public class RegistrationForm extends JPanel implements ActionListener{
 	}
 	public void actionPerformed(ActionEvent e){
 		String inputprice=pricefield.getText();
-		String inputcondition=conditionField.getSelectedItem().toString();
-		UserBookTable table = UserBookTable.get();
-		table.createBook(user.getid(),registerbook.ISBN,Integer.parseInt(inputprice),inputcondition);
-		frame.remove(center);
-		View.search.searchDialog();
-		JOptionPane.showMessageDialog(frame, "Thank you! \n We have successfully registered your book");
+		try{
+			int price=Integer.parseInt(inputprice);
+			String inputcondition=conditionField.getSelectedItem().toString();
+			UserBookTable table = UserBookTable.get();
+			table.createBook(user.getid(),registerbook.ISBN,price,inputcondition);
+			frame.remove(center);
+			View.search.searchDialog();
+			JOptionPane.showMessageDialog(frame, "Thank you! \n We have successfully registered your book");
 		}
+		catch(NumberFormatException b){
+			JOptionPane.showMessageDialog(frame, "Your price can only be a number!");
+		}
+		
+	}
 			/*JOptionPane.showMessageDialog(frame,
 				    "Something went wrong! \n Please try again",
 				    "Registration Error",
