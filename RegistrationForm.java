@@ -110,6 +110,7 @@ public class RegistrationForm extends JPanel implements ActionListener{
 		vGroup.addGroup(NameGroup);
 		vGroup.addGroup(AuthorGroup);
 		vGroup.addGroup(priceGroup);
+		
 		vGroup.addGroup(conditionGroup);
 		vGroup.addGroup(buttonGroup);
 		inputs.setVerticalGroup(vGroup);

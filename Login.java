@@ -263,9 +263,16 @@ public boolean createaccount(){
 		return false;
 	}
 	else {
-		UserAccountTable.get().createAccount(username,pw,phone,name,email);
-		JOptionPane.showMessageDialog(dialog, "Thank you "+ name + " you have been registered!");
-		return true;
+		if(UserAccountTable.get().existsUN(username)){
+			JOptionPane.showMessageDialog(dialog, "The username " + username  + " aldready exists.\n Try another username!");
+			return false;
+		}
+		else{
+			UserAccountTable.get().createAccount(username,pw,phone,name,email);
+			JOptionPane.showMessageDialog(dialog, "Thank you "+ name + " you have been registered!");
+			return true;
+		}
+		
 	}
 }
 //	Use: a.authenticate(x,y);
