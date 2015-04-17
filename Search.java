@@ -315,7 +315,6 @@ public class Search extends JFrame implements ActionListener
 		  BookSellerLabel[i].setActionCommand("more"+i);
 		  BookSellerLabel[i].setName(seller.username);
 		  BookSellerLabel[i].addActionListener(this);
-		  BookSellerLabel[i].setBorderPainted(false);
 		  BookSellerLabel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 		  BookConditionLabel[i]=new JLabel(usedbooks.get(i).getCondition());
 		  labels.addComponent(TitleLabel);

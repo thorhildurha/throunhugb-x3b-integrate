@@ -255,9 +255,14 @@ public boolean createaccount(){
 	int phone=0;
 	//If user does not fill in phonenumber, phone must be 0
 	if(!phonenumber.isEmpty()){
+		try{
 		phone=Integer.parseInt(phonenumber);
+		}
+		catch(NumberFormatException e){
+			JOptionPane.showMessageDialog(dialog," Phonenumber must be on the following format: \n 6667777");
+			return false;
+		}
 	}
-
 	if (name.isEmpty()||email.isEmpty() ||username.isEmpty() || pw.isEmpty()) {
 		JOptionPane.showMessageDialog(dialog,"You have to fill out the required fields (*)");
 		return false;
